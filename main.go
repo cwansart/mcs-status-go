@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	"de.cwansart.mcss/settings"
 )
 
 func getHttpClient() http.Client {
@@ -15,6 +17,7 @@ func getHttpClient() http.Client {
 }
 
 func getServerStatus(url string) *http.Response {
+	log.Printf("Calling %v", url)
 	c := getHttpClient()
 	r, err := c.Get(url)
 	if err != nil {
@@ -42,6 +45,7 @@ func readAndPrintData(url string) {
 }
 
 func main() {
-	mcUrl := "http://localhost:8080/"
+	settings.ReadConfig()
+	mcUrl := settings.Get(settings.ServerUrlKey)
 	readAndPrintData(mcUrl)
 }
