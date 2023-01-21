@@ -23,7 +23,7 @@ type Response struct {
 
 func getHttpClient() http.Client {
 	return http.Client{
-		Timeout: 3 * time.Second,
+		Timeout: 500 * time.Millisecond,
 	}
 }
 
