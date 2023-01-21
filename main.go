@@ -10,5 +10,5 @@ import (
 func main() {
 	url := settings.Get(settings.ServerUrlKey)
 	status := status.Get(url)
-	fmt.Printf("status: %v\n", status)
+	fmt.Printf("Player Count: %v\n", status.Players.Count)
 }

@@ -1,11 +1,20 @@
 package status
 
 import (
+	"encoding/json"
 	"io"
 	"log"
 	"net/http"
 	"time"
 )
+
+type Status struct {
+	Players Players `json:"players"`
+}
+
+type Players struct {
+	Count int32 `json:"count"`
+}
 
 func getHttpClient() http.Client {
 	return http.Client{
@@ -24,18 +33,18 @@ func getServerStatus(url string) *http.Response {
 	return r
 }
 
-func getResponseBody(r *http.Response) string {
+func getResponseBody(r *http.Response) []byte {
 	defer r.Body.Close()
 	b, err := io.ReadAll(r.Body)
 	if err != nil {
 		log.Fatalln(err)
-		return ""
 	}
-	return string(b)
+	return b
 }
 
-func Get(url string) string {
+func Get(url string) (s Status) {
 	r := getServerStatus(url)
 	b := getResponseBody(r)
-	return b
+	json.Unmarshal(b, &s)
+	return
 }
