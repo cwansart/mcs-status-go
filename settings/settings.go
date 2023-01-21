@@ -48,5 +48,5 @@ func ReadConfig() {
 
 func Get(key string) string {
 	// TODO: check if key is known
-	return viper.Get(key).(string)
+	return viper.GetString(key)
 }
