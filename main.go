@@ -9,10 +9,10 @@ import (
 )
 
 func main() {
+	url := settings.Get(settings.ServerUrlKey)
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	r.GET("/", func(c *gin.Context) {
-		url := settings.Get(settings.ServerUrlKey)
 		s := status.Get(url)
 		c.JSON(http.StatusOK, s)
 	})
