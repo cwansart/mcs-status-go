@@ -47,6 +47,9 @@ func ReadConfig() {
 }
 
 func Get(key string) string {
-	// TODO: check if key is known
-	return viper.GetString(key)
+	value := viper.GetString(key)
+	if len(value) == 0 {
+		log.Fatalf("Cannot find setting for key: '%v'", key)
+	}
+	return value
 }
