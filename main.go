@@ -1,18 +1,20 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
+	"net/http"
 
 	"de.cwansart.mcss/settings"
 	"de.cwansart.mcss/status"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	url := settings.Get(settings.ServerUrlKey)
-	r := status.Get(url)
+	s := status.Get(url)
 
-	json, _ := json.Marshal(r)
-
-	fmt.Printf("Player Count: %v\n", string(json))
+	r := gin.Default()
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, s)
+	})
+	r.Run()
 }
