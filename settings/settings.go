@@ -41,12 +41,13 @@ func readConfigFile() {
 	}
 }
 
-func ReadConfig() {
+func init() {
 	setDefaults()
 	readConfigFile()
 }
 
 func Get(key string) string {
+	// TODO: return error on failure instead of calling log.Fatalf
 	value := viper.GetString(key)
 	if len(value) == 0 {
 		log.Fatalf("Cannot find setting for key: '%v'", key)

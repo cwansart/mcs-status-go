@@ -45,7 +45,6 @@ func readAndPrintData(url string) {
 }
 
 func main() {
-	settings.ReadConfig()
-	mcUrl := settings.Get(settings.ServerUrlKey)
-	readAndPrintData(mcUrl)
+	url := settings.Get(settings.ServerUrlKey)
+	readAndPrintData(url)
 }
