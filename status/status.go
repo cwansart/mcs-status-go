@@ -8,12 +8,17 @@ import (
 	"time"
 )
 
-type Status struct {
-	Players Players `json:"players"`
+type status struct {
+	Players players `json:"players"`
 }
 
-type Players struct {
+type players struct {
 	Count int32 `json:"count"`
+}
+
+type Response struct {
+	IsOnline    bool  `json:"online"`
+	PlayerCount int32 `json:"player_count"`
 }
 
 func getHttpClient() http.Client {
@@ -22,29 +27,54 @@ func getHttpClient() http.Client {
 	}
 }
 
-func getServerStatus(url string) *http.Response {
+func getServerStatus(url string) (*http.Response, error) {
 	log.Printf("Calling %v", url)
 	c := getHttpClient()
 	r, err := c.Get(url)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
+		return nil, err
 	}
 
-	return r
+	return r, nil
 }
 
-func getResponseBody(r *http.Response) []byte {
+func getResponseBody(r *http.Response) ([]byte, error) {
 	defer r.Body.Close()
 	b, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
+		return nil, err
 	}
-	return b
+	return b, nil
 }
 
-func Get(url string) (s Status) {
-	r := getServerStatus(url)
-	b := getResponseBody(r)
-	json.Unmarshal(b, &s)
+func getStatus(url string) (s status, err error) {
+	r, err := getServerStatus(url)
+	if err != nil {
+		return status{}, err
+	}
+
+	b, err := getResponseBody(r)
+	if err != nil {
+		return status{}, err
+	}
+
+	err2 := json.Unmarshal(b, &s)
+	if err2 != nil {
+		return status{}, err
+	}
+
+	return s, nil
+}
+
+func Get(url string) (r Response) {
+	s, err := getStatus(url)
+
+	if err == nil {
+		r.PlayerCount = s.Players.Count
+		r.IsOnline = true
+	}
+
 	return
 }

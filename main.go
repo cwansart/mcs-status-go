@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"de.cwansart.mcss/settings"
@@ -9,6 +10,9 @@ import (
 
 func main() {
 	url := settings.Get(settings.ServerUrlKey)
-	status := status.Get(url)
-	fmt.Printf("Player Count: %v\n", status.Players.Count)
+	r := status.Get(url)
+
+	json, _ := json.Marshal(r)
+
+	fmt.Printf("Player Count: %v\n", string(json))
 }
