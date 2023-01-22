@@ -60,8 +60,8 @@ func getStatus(url string) (s status, err error) {
 		return status{}, err
 	}
 
-	err2 := json.Unmarshal(b, &s)
-	if err2 != nil {
+	err = json.Unmarshal(b, &s)
+	if err != nil {
 		return status{}, err
 	}
 
