@@ -5,6 +5,7 @@ import (
 	"errors"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 const configFile = "./config.json"
@@ -37,12 +38,18 @@ func loadConfigFile(p string) {
 func ReadConfigFile() Config {
 	log.Println("Loading config file")
 
-	if _, err := os.Stat(configFile); errors.Is(err, os.ErrNotExist) {
-		createConfigFile(configFile)
-	} else {
-		loadConfigFile(configFile)
+	p, err := filepath.Abs(configFile)
+	if err != nil {
+		log.Println("Failed to get the absolute config file path, using", configFile)
+		p = configFile
 	}
-	log.Println("Successfully read config file", configFile, config.ServerUrl)
+
+	if _, err := os.Stat(p); errors.Is(err, os.ErrNotExist) {
+		createConfigFile(p)
+	} else {
+		loadConfigFile(p)
+	}
+	log.Println("Successfully read config file", p)
 
 	return config
 }
