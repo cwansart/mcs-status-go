@@ -1,16 +1,15 @@
 package settings
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
-
-	"github.com/spf13/viper"
+	"os"
 )
 
 const (
 	configFile = "config.json"
-	configName = "config"
-	configType = "json"
 	configPath = "."
 )
 
@@ -18,39 +17,45 @@ const (
 	ServerUrlKey = "serverurl"
 )
 
-func setDefaults() {
-	viper.SetConfigFile(configFile)
-	viper.SetConfigName(configName)
-	viper.SetConfigType(configType)
-	viper.AddConfigPath(configPath)
-	viper.SetDefault(ServerUrlKey, "http://localhost:2008")
+type Config struct {
+	ServerUrl string `json:"serverurl"`
+}
+
+var config = Config{
+	ServerUrl: "http://localhost:2006",
 }
 
 func readConfigFile() {
 	log.Println("Loading config file")
-	if err := viper.ReadInConfig(); err != nil {
-		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			newConfigFilePath := fmt.Sprintf("%v/%v", configPath, configFile)
-			log.Printf("Could not find config file, generating one using defaults in %v", newConfigFilePath)
-			viper.WriteConfigAs(newConfigFilePath)
-		} else {
-			log.Println("Could not load config file, using defaults.", err)
+	p := fmt.Sprintf("%v/%v", configPath, configFile)
+
+	if _, err := os.Stat(p); errors.Is(err, os.ErrNotExist) {
+		log.Printf("Could not find config file, generating one using defaults in %v", p)
+		b, err := json.MarshalIndent(config, "", "  ")
+		if err != nil {
+			log.Fatal("Could not marshal config data to json")
 		}
+		os.WriteFile(p, b, 0600)
 	} else {
-		log.Println("Successfully read config file", viper.ConfigFileUsed())
+		b, err := os.ReadFile(p)
+		if err != nil {
+			log.Fatalf("Could not open config file %v", p)
+		}
+		json.Unmarshal(b, &config)
 	}
+	log.Println("Successfully read config file", p, config.ServerUrl)
 }
 
 func init() {
-	setDefaults()
 	readConfigFile()
 }
 
 func Get(key string) string {
-	// TODO: return error on failure instead of calling log.Fatalf
-	value := viper.GetString(key)
-	if len(value) == 0 {
+	switch key {
+	case ServerUrlKey:
+		return config.ServerUrl
+	default:
 		log.Fatalf("Cannot find setting for key: '%v'", key)
+		return ""
 	}
-	return value
 }
