@@ -17,11 +17,11 @@ func main() {
 		b, err := json.Marshal(s)
 
 		if err != nil {
-			log.Println("Failed to parse json:", s)
+			log.Println("Failed to convert status to json:", s)
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("500 internal server error"))
 		} else {
-			log.Println("Receive request, response:", string(b))
+			log.Println("Received request, response:", string(b))
 			w.Header().Add("Content-Type", "application/json")
 			w.Write(b)
 		}
