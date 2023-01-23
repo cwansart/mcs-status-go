@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	configFile = "config.yaml"
+	configFile = "config.json"
 	configName = "config"
-	configType = "yaml"
+	configType = "json"
 	configPath = "."
 )
 
