@@ -13,10 +13,6 @@ const (
 	configPath = "."
 )
 
-const (
-	ServerUrlKey = "serverurl"
-)
-
 type Config struct {
 	ServerUrl string `json:"serverurl"`
 }
@@ -25,7 +21,7 @@ var config = Config{
 	ServerUrl: "http://localhost:2006",
 }
 
-func readConfigFile() {
+func ReadConfigFile() Config {
 	log.Println("Loading config file")
 	p := fmt.Sprintf("%v/%v", configPath, configFile)
 
@@ -44,18 +40,6 @@ func readConfigFile() {
 		json.Unmarshal(b, &config)
 	}
 	log.Println("Successfully read config file", p, config.ServerUrl)
-}
 
-func init() {
-	readConfigFile()
-}
-
-func Get(key string) string {
-	switch key {
-	case ServerUrlKey:
-		return config.ServerUrl
-	default:
-		log.Fatalf("Cannot find setting for key: '%v'", key)
-		return ""
-	}
+	return config
 }

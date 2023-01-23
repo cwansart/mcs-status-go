@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	url := settings.Get(settings.ServerUrlKey)
+	url := settings.ReadConfigFile().ServerUrl
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		s := status.Get(url)
