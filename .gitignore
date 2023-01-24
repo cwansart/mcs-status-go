@@ -1,6 +1,9 @@
 config.yaml
 config.ini
 config.json
+
 mcss
 de.cwansart.mcss.exe
+__debug_bin.exe
+
 coverage.out
