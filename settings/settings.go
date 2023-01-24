@@ -8,34 +8,36 @@ import (
 	"path/filepath"
 )
 
-const configFile = "./config.json"
-
 type Config struct {
 	ServerUrl string `json:"serverurl"`
 }
 
-var config = Config{
-	ServerUrl: "http://localhost:2006",
+func NewConfig(configFile string) Config {
+	c := Config{
+		ServerUrl: "http://localhost:2006",
+	}
+	c.readConfigFile(configFile)
+	return c
 }
 
-func createConfigFile(p string) {
+func (c *Config) createConfigFile(p string) {
 	log.Printf("Could not find config file, generating one using defaults in %v", p)
-	b, err := json.MarshalIndent(config, "", "  ")
+	b, err := json.MarshalIndent(c, "", "  ")
 	if err != nil {
 		log.Fatal("Could not marshal config data to json")
 	}
 	os.WriteFile(p, b, 0600)
 }
 
-func loadConfigFile(p string) {
+func (c *Config) loadConfigFile(p string) {
 	b, err := os.ReadFile(p)
 	if err != nil {
 		log.Fatalf("Could not open config file %v", p)
 	}
-	json.Unmarshal(b, &config)
+	json.Unmarshal(b, c)
 }
 
-func ReadConfigFile() Config {
+func (c *Config) readConfigFile(configFile string) {
 	log.Println("Loading config file")
 
 	p, err := filepath.Abs(configFile)
@@ -45,11 +47,10 @@ func ReadConfigFile() Config {
 	}
 
 	if _, err := os.Stat(p); errors.Is(err, os.ErrNotExist) {
-		createConfigFile(p)
+		c.createConfigFile(p)
 	} else {
-		loadConfigFile(p)
+		c.loadConfigFile(p)
 	}
-	log.Println("Successfully read config file", p)
 
-	return config
+	log.Println("Successfully read config file", p)
 }
