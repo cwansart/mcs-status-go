@@ -19,12 +19,10 @@ type Config struct {
 	ServerUrl string `json:"serverurl"`
 }
 
-func NewConfig(configFile string) Config {
-	c := Config{
-		ServerUrl: "http://localhost:2006",
-	}
+func NewConfig(configFile string) (c Config) {
+	c.ServerUrl = "http://localhost:2006"
 	c.readConfigFile(configFile)
-	return c
+	return
 }
 
 func (c *Config) createConfigFile(p string) {
