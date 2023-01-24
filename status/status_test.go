@@ -1,11 +1,9 @@
-package status_test
+package status
 
 import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"de.cwansart.mcss/status"
 )
 
 func TestIsOnline(t *testing.T) {
@@ -14,7 +12,7 @@ func TestIsOnline(t *testing.T) {
 	}))
 	defer s.Close()
 
-	r := status.Get(s.URL)
+	r := Get(s.URL)
 
 	if r.IsOnline == false {
 		t.Errorf("IsOnline should be true")
@@ -31,7 +29,7 @@ func TestIsOffline(t *testing.T) {
 	url := s.URL
 	s.Close()
 
-	r := status.Get(url)
+	r := Get(url)
 
 	if r.IsOnline == true {
 		t.Errorf("IsOnline should be false")
@@ -47,7 +45,7 @@ func TestInvalidJsonServerResponse(t *testing.T) {
 	}))
 	defer s.Close()
 
-	r := status.Get(s.URL)
+	r := Get(s.URL)
 
 	if r.IsOnline == false {
 		t.Errorf("IsOnline should be true")
@@ -63,7 +61,7 @@ func TestJsonUnmarshallingError(t *testing.T) {
 	}))
 	defer s.Close()
 
-	r := status.Get(s.URL)
+	r := Get(s.URL)
 
 	if r.IsOnline == false {
 		t.Errorf("IsOnline should be true")
