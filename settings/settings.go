@@ -3,10 +3,17 @@ package settings
 import (
 	"encoding/json"
 	"errors"
+	"io/fs"
 	"log"
 	"os"
 	"path/filepath"
 )
+
+type ReadFileFunc func(string) ([]byte, error)
+type WriteFileFunc func(string, []byte, fs.FileMode) error
+
+var readFile ReadFileFunc = os.ReadFile
+var writeFile WriteFileFunc = os.WriteFile
 
 type Config struct {
 	ServerUrl string `json:"serverurl"`
@@ -26,11 +33,11 @@ func (c *Config) createConfigFile(p string) {
 	if err != nil {
 		log.Fatal("Could not marshal config data to json")
 	}
-	os.WriteFile(p, b, 0600)
+	writeFile(p, b, 0600)
 }
 
 func (c *Config) loadConfigFile(p string) {
-	b, err := os.ReadFile(p)
+	b, err := readFile(p)
 	if err != nil {
 		log.Fatalf("Could not open config file %v", p)
 	}
