@@ -7,6 +7,8 @@ import (
 )
 
 func TestIsOnline(t *testing.T) {
+	t.Parallel()
+
 	s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`{"players": {"count": 1}}`))
 	}))
@@ -23,6 +25,8 @@ func TestIsOnline(t *testing.T) {
 }
 
 func TestIsOffline(t *testing.T) {
+	t.Parallel()
+
 	s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 	}))
@@ -40,6 +44,8 @@ func TestIsOffline(t *testing.T) {
 }
 
 func TestInvalidJsonServerResponse(t *testing.T) {
+	t.Parallel()
+
 	s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`{}`))
 	}))
@@ -56,6 +62,8 @@ func TestInvalidJsonServerResponse(t *testing.T) {
 }
 
 func TestJsonUnmarshallingError(t *testing.T) {
+	t.Parallel()
+
 	s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`[ini]\nconf=test`))
 	}))
@@ -63,8 +71,8 @@ func TestJsonUnmarshallingError(t *testing.T) {
 
 	r := Get(s.URL)
 
-	if r.IsOnline == false {
-		t.Errorf("IsOnline should be true")
+	if r.IsOnline == true {
+		t.Errorf("IsOnline should be false")
 	}
 	if r.PlayerCount > 0 {
 		t.Errorf("PlayerCount should be 0")
