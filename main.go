@@ -5,12 +5,12 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/cwansart/mcs-status-go/settings"
+	"github.com/cwansart/mcs-status-go/config"
 	"github.com/cwansart/mcs-status-go/status"
 )
 
 func main() {
-	c := settings.NewConfig("./config.json")
+	c := config.NewConfig("./config.json")
 	url := c.ServerUrl
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
