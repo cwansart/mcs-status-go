@@ -68,7 +68,8 @@ func getStatus(url string) (s status, err error) {
 	return s, nil
 }
 
-func Get(url string) (r Response) {
+func Get(url string) Response {
+	r := Response{}
 	s, err := getStatus(url)
 
 	if err == nil {
@@ -76,5 +77,5 @@ func Get(url string) (r Response) {
 		r.IsOnline = true
 	}
 
-	return
+	return r
 }
