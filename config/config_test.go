@@ -1,4 +1,4 @@
-package config
+package config_test
 
 import (
 	"encoding/json"
@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"os"
 	"testing"
+
+	"github.com/cwansart/mcs-status-go/config"
 )
 
 func TestSettings(t *testing.T) {
@@ -13,7 +15,7 @@ func TestSettings(t *testing.T) {
 		t.Parallel()
 		configFile := getTempConfigFileName(t)
 
-		NewConfig(configFile)
+		config.NewConfig(configFile)
 
 		if _, err := os.Stat(configFile); errors.Is(err, os.ErrNotExist) {
 			t.Errorf("Test should have created config file '%s' but did not", configFile)
@@ -24,7 +26,7 @@ func TestSettings(t *testing.T) {
 		t.Parallel()
 		configFile := getTempConfigFileName(t)
 
-		got := NewConfig(configFile)
+		got := config.NewConfig(configFile)
 
 		want := "http://localhost:2006"
 		if got.ServerUrl != want {
@@ -34,9 +36,9 @@ func TestSettings(t *testing.T) {
 
 	t.Run("read stored config file", func(t *testing.T) {
 		configFile := getTempConfigFileName(t)
-		saveAsFile(t, Config{"http://localhost:8888"}, configFile)
+		saveAsFile(t, config.Config{"http://localhost:8888"}, configFile)
 
-		got := NewConfig(configFile)
+		got := config.NewConfig(configFile)
 
 		want := "http://localhost:8888"
 		if got.ServerUrl != want {
@@ -52,7 +54,7 @@ func getTempConfigFileName(t *testing.T) (c string) {
 	return c
 }
 
-func saveAsFile(t *testing.T, c Config, f string) {
+func saveAsFile(t *testing.T, c config.Config, f string) {
 	t.Helper()
 
 	json, err := json.Marshal(c)
