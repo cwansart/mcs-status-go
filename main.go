@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	"de.cwansart.mcss/settings"
-	"de.cwansart.mcss/status"
+	"github.com/cwansart/mcs-status-go/settings"
+	"github.com/cwansart/mcs-status-go/status"
 )
 
 func main() {
