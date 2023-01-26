@@ -1,9 +1,11 @@
-package status
+package status_test
 
 import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/cwansart/mcs-status-go/status"
 )
 
 func TestStatus(t *testing.T) {
@@ -15,7 +17,7 @@ func TestStatus(t *testing.T) {
 		}))
 		defer s.Close()
 
-		r := Get(s.URL)
+		r := status.Get(s.URL)
 
 		if r.IsOnline == false {
 			t.Errorf("IsOnline should be true")
@@ -33,7 +35,7 @@ func TestStatus(t *testing.T) {
 		url := s.URL
 		s.Close()
 
-		r := Get(url)
+		r := status.Get(url)
 
 		if r.IsOnline == true {
 			t.Errorf("IsOnline should be false")
@@ -51,7 +53,7 @@ func TestStatus(t *testing.T) {
 		}))
 		defer s.Close()
 
-		r := Get(s.URL)
+		r := status.Get(s.URL)
 
 		if r.IsOnline == false {
 			t.Errorf("IsOnline should be true")
@@ -69,7 +71,7 @@ func TestStatus(t *testing.T) {
 		}))
 		defer s.Close()
 
-		r := Get(s.URL)
+		r := status.Get(s.URL)
 
 		if r.IsOnline == true {
 			t.Errorf("IsOnline should be false")
